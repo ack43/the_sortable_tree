@@ -25,11 +25,21 @@ function sortable_tree_init(tree_config) {
       $.each($('#' + tree_config['id'] + ' li'), function(){
           var del_button = $(this).find('.delete_button');
           if($(this).find("ol").text().trim().length == 0)
-              del_button.addClass('delete').removeClass('undeleted').attr('title', del_button.data('delete-title')).attr('href', del_button.data('delete-href')).
-                  attr('data-confirm', del_button.data('delete-confirm')).attr('data-method', 'delete').attr('onclick', '');
+              del_button.addClass('delete').
+                  removeClass('undeleted').
+                  attr('title', del_button.data('delete-title')).
+                  attr('href', del_button.data('delete-href')).
+                  attr('data-confirm', del_button.data('delete-confirm')).
+                  attr('data-method', 'delete').
+                  attr('onclick', 'return false;');
           else
-              del_button.addClass('undeleted').removeClass('delete').attr('title', del_button.data('cant-delete-title')).
-                  attr('href', "#").attr('data-confirm', '').attr('data-method', '').attr('onclick', del_button.data('delete-alert'));
+              del_button.addClass('undeleted').
+                  removeClass('delete').
+                  attr('title', del_button.data('cant-delete-title')).
+                  attr('href', "#").
+                  attr('data-confirm', '').
+                  attr('data-method', '').
+                  attr('onclick', del_button.data('delete-alert'));
           return true;
       });
   }
