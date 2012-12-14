@@ -21,6 +21,7 @@
 - if opts[:has_children]
   - delete =  link_to('', url_for(opts[:namespace] + [node]),
     title:      t('.delete'),
+    onclick:    "return false;",
     method:     :delete,
     confirm:    t('.delete_confirm'),
     class:      'ns_button delete delete_button',
@@ -32,7 +33,7 @@
 - else
   - delete =  link_to('', '#',
     title:      t('.cant_be_deleted'),
-    onclick:    "alert('#{t('.delete_nested_elements')}')",
+    onclick:    "alert('#{t('.delete_nested_elements')}'); return false;",
     class:      'ns_button undeleted delete_button',
     data:       { delete_title: t('.delete'),
                   cant_delete_title: t('.cant_be_deleted'),
