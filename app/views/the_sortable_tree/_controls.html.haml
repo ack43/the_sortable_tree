@@ -28,7 +28,7 @@
                   cant_delete_title: t('.cant_be_deleted') ,
                   href: url_for(opts[:namespace] + [node]),
                   delete_confirm: t('.delete_confirm'),
-                  delete_alert: "alert('#{t('.delete_nested_elements')}')"})
+                  delete_alert: "alert('#{t('.delete_nested_elements')}'); return false"})
 - else
   - delete =  link_to('', '#',
     title:      t('.cant_be_deleted'),
@@ -38,6 +38,6 @@
                   cant_delete_title: t('.cant_be_deleted'),
                   href: url_for(opts[:namespace] + [node]),
                   delete_confirm: t('.delete_confirm'),
-                  delete_alert: "alert('#{t('.delete_nested_elements')}')"})
+                  delete_alert: "alert('#{t('.delete_nested_elements')}'); return false"})
 -# OUTPUT
 = toggle + edit + delete
