@@ -8,12 +8,16 @@ module TheSortableTreeController
       id        = params[:id].to_s
       variable, collection, klass = the_define_common_variables
       variable = self.instance_variable_set(variable, the_find(klass, id))
-      variable.enabled = true
+      if variable.respond_to? :enabled
+        variable.enabled = true
+      elsif variable.respond_to? :status
+        variable.status = true
+      end
       variable.save
       if request.xhr?
-        render text: 'ok'
+        render text: "true|#{I18n.t("disable_this")}"
       else 
-        redirect_to url_for(action: :index), notice: t('the_sortable_tree.enabled')
+        redirect_to :back, notice: t('the_sortable_tree.enabled')
       end
     end
     
@@ -21,12 +25,16 @@ module TheSortableTreeController
       id        = params[:id].to_s
       variable, collection, klass = the_define_common_variables
       variable = self.instance_variable_set(variable, the_find(klass, id))
-      variable.enabled = false
+      if variable.respond_to? :enabled
+        variable.enabled = false
+      elsif variable.respond_to? :status
+        variable.status = false
+      end
       variable.save
       if request.xhr?
-        render text: 'ok'
+        render text: "false|#{I18n.t("enable_this")}"
       else 
-        redirect_to url_for(action: :index), notice: t('the_sortable_tree.disabled')
+        redirect_to :back, notice: t('the_sortable_tree.disabled')
       end
     end
     
@@ -67,13 +75,11 @@ module TheSortableTreeController
       
       variable, collection, klass = self.the_define_common_variables
       variable = self.instance_variable_set(variable, the_find(klass, id))
-      p variable
       if prev_id.empty? && next_id.empty?
         variable.move_to_child_of the_find(klass, parent_id)
       elsif !prev_id.empty?
         variable.move_to_right_of the_find(klass, prev_id)
       elsif !next_id.empty?
-        p the_find(klass, next_id)
         variable.move_to_left_of the_find(klass, next_id)
       end
 

@@ -1,23 +1,35 @@
 -# TOGGLE
-- if node.enabled.nil?
-  - toggle = ''
-- if node.enabled
-  - toggle = link_to '', polymorphic_url(opts[:namespace] + [node], action: :disable), :title => t('.disable_this'), :class => 'ns_button on', method: :post
+- if node.respond_to? :enabled
+  - if node.enabled.nil?
+    - toggle = ''
+  - if node.enabled
+    - toggle = link_to '', polymorphic_url(opts[:namespace] + [node], action: :disable), :title => t('.disable_this'), :class => 'ns_button on', method: :post
+  - else
+    - toggle = link_to '', polymorphic_url(opts[:namespace] + [node], action: :enable), :title => t('.enable_this'), :class => 'ns_button off', method: :post
+- elsif node.respond_to? :status
+  - if node.status.nil?
+    - toggle = ''
+  - if node.status
+    - toggle = link_to '', polymorphic_url(opts[:namespace] + [node], action: :disable), :title => t('.disable_this'), :class => 'ns_button on', method: :post
+  - else
+    - toggle = link_to '', polymorphic_url(opts[:namespace] + [node], action: :enable), :title => t('.enable_this'), :class => 'ns_button off', method: :post
 - else
-  - toggle = link_to '', polymorphic_url(opts[:namespace] + [node], action: :enable), :title => t('.enable_this'), :class => 'ns_button off', method: :post
+  - toggle = ''
 -# EDIT
 - edit = link_to '', polymorphic_url(opts[:namespace] + [node], :action => :edit), :title => t('.edit_this'), :class => 'ns_button edit'
 -# DELETE
 - if opts[:has_children]
   - delete =  link_to('', url_for(opts[:namespace] + [node]),
-    :title    =>  t('.delete'),
-    :method   =>  :delete,
-    :confirm  =>  t('.delete_confirm'),
-    :class    =>  'ns_button delete')
+    title:      t('.delete'),
+    method:     :delete,
+    confirm:    t('.delete_confirm'),
+    class:      'ns_button delete delete_button',
+    data:       { delete_title: t('.delete'), cant_delete_title: t('.cant_be_deleted') }, href: url_for(opts[:namespace] + [node]), delete_confirm: t('.delete_confirm'))
 - else
   - delete =  link_to('', '#',
-    :title    =>  t('.cant_be_deleted'),
-    :onclick  =>  "alert('#{t('.delete_nested_elements')}')",
-    :class    =>  'ns_button undeleted')
+    title:      t('.cant_be_deleted'),
+    onclick:    "alert('#{t('.delete_nested_elements')}')",
+    class:      'ns_button undeleted delete_button',
+    data:       { delete_title: t('.delete'), cant_delete_title: t('.cant_be_deleted') }, href: url_for(opts[:namespace] + [node]), delete_confirm: t('.delete_confirm'))
 -# OUTPUT
 = toggle + edit + delete

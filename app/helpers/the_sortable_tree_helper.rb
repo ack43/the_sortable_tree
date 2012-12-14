@@ -11,9 +11,9 @@ module TheSortableTreeHelper
 
   def define_class_of_elements_of tree
     case
-      #when tree.is_a?(ActiveRecord::Relation) then tree.name.to_s.downcase
+      when defined?(ActiveRecord) && tree.is_a?(ActiveRecord::Relation) then tree.name.to_s.underscore.downcase
       when tree.empty? then nil
-      else tree.first.class.to_s.downcase
+      else tree.first.class.to_s.underscore.downcase
     end
   end
 
@@ -22,9 +22,14 @@ module TheSortableTreeHelper
       path:  opts[:path] || :the_sortable_tree,
       klass: define_class_of_elements_of(tree),
       title: opts[:title] || :title,
+      extra: opts[:extra] || '',
       max_levels: opts[:max_levels] || 3,
-      namespace: Array.wrap(opts[:namespace])
+      namespace: Array.wrap(opts[:namespace]),
+      rand_id: rand(100_000_000..999_999_999),
     })
+    opts[:sort_by] = :lft if opts[:sort_by].nil?
+    
+    tree = tree.to_a.sort_by { |m| m.send(opts[:sort_by]).nil? ? 0 : m.send(opts[:sort_by]) }
     render partial: "#{opts[:path]}/tree", locals: { tree: sortable_tree_builder(tree, opts), opts: opts }
   end
 

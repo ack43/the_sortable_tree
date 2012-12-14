@@ -21,6 +21,17 @@ function sortable_tree_init(tree_config) {
               window.location.reload();
           }
       });
+
+      $.each($('#' + tree_config['id'] + ' li'), function(){
+          var del_button = $(this).find('.delete_button');
+          if($(this).find("ol").text().trim().length == 0)
+              del_button.addClass('delete').removeClass('undeleted').attr('title', del_button.data('delete-title')).
+                  attr('href', del_button.data('delete-href')).attr('data-confirm', del_button.data('delete-confirm')).attr('data-method', 'delete');
+          else
+              del_button.addClass('undeleted').removeClass('delete').attr('title', del_button.data('cant-delete-title')).
+                  attr('href', "#").attr('data-confirm', '').attr('data-method', '');
+          return true;
+      });
   }
 
   $(function(){
@@ -46,24 +57,34 @@ function sortable_tree_init(tree_config) {
           }
       });
 
-      function handleMethod(link, callback) {
-        var req = {}, href = link.attr('href');
-        $.post(href, req, callback);
+      function handleMethod(t) {
+          var $t = $(t);
+          $.ajax({
+              url: $t.attr('href'),
+              type: 'POST',
+              success: function(resp) {
+                  if (resp.split("|")[0] == 'false') {
+                      $t.removeClass('on').addClass('off');
+                      $t.attr('href', $t.attr('href').replace('/disable', '/enable'));
+                  } else {
+                      $t.removeClass('off').addClass('on');
+                      $t.attr('href', $t.attr('href').replace('/enable', '/disable'));
+                  }
+                  $t.prop('title', resp.split("|")[1])
+              },
+              error: function() {
+                  alert('При обращении к серверу произошла ошибка.');
+              }
+          });
+
+          return false;
       }
-      
+
       $('#' + tree_config['id']).on('click', 'a.on', function() {
-        var $t = $(this);
-        handleMethod($t, function() {
-          $t.removeClass('on').addClass('off');
-        });
-        return false;
+          return handleMethod(this);
       });
       $('#' + tree_config['id']).on('click', 'a.off', function() {
-        var $t = $(this);
-        handleMethod($t, function() {
-          $t.removeClass('off').addClass('on');
-        });
-        return false;
+          return handleMethod(this);
       });
   });
 }

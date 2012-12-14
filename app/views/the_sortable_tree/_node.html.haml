@@ -1,10 +1,17 @@
 %li{ :id => "#{node.send(opts[:id])}_#{opts[:klass]}", :'data-id' => node.send(opts[:id]) }
-  - title = node.send opts[:title]
+  - if opts[:title].is_a? Proc
+    - title = opts[:title].call(node)
+  - else
+    - title = node.send opts[:title]
+  - if opts[:extra].is_a? Proc
+    - extra = opts[:extra].call(node)
+  - else
+    - extra = opts[:extra]
   - handle = content_tag :i, '', :class => :handle
-  - link = link_to(title, url_for(opts[:namespace] + [node]), :title => title)
+  - link = link_to(title, url_for(opts[:namespace] + [node]), :title => strip_tags(title).strip)
   - controls = render(:partial => "#{opts[:path]}/controls", :locals => { :node => node, :opts => opts })
   - controls = content_tag(:b, controls, :class => :controls)
-  - element = handle + controls + link
+  - element = handle + extra + controls + link 
   %div{ :class => "link#{' root' if root}" }
     = element
   = content_tag :ol, raw(children)
