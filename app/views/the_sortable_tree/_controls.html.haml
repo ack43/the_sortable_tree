@@ -24,12 +24,20 @@
     method:     :delete,
     confirm:    t('.delete_confirm'),
     class:      'ns_button delete delete_button',
-    data:       { delete_title: t('.delete'), cant_delete_title: t('.cant_be_deleted') }, href: url_for(opts[:namespace] + [node]), delete_confirm: t('.delete_confirm'))
+    data:       { delete_title: t('.delete'),
+                  cant_delete_title: t('.cant_be_deleted') ,
+                  href: url_for(opts[:namespace] + [node]),
+                  delete_confirm: t('.delete_confirm'),
+                  delete_alert: "alert('#{t('.delete_nested_elements')}')"})
 - else
   - delete =  link_to('', '#',
     title:      t('.cant_be_deleted'),
     onclick:    "alert('#{t('.delete_nested_elements')}')",
     class:      'ns_button undeleted delete_button',
-    data:       { delete_title: t('.delete'), cant_delete_title: t('.cant_be_deleted') }, href: url_for(opts[:namespace] + [node]), delete_confirm: t('.delete_confirm'))
+    data:       { delete_title: t('.delete'),
+                  cant_delete_title: t('.cant_be_deleted'),
+                  href: url_for(opts[:namespace] + [node]),
+                  delete_confirm: t('.delete_confirm'),
+                  delete_alert: "alert('#{t('.delete_nested_elements')}')"})
 -# OUTPUT
 = toggle + edit + delete
