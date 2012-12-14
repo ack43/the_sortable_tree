@@ -24,7 +24,8 @@ function sortable_tree_init(tree_config) {
 
       $.each($('#' + tree_config['id'] + ' li'), function(){
           var del_button = $(this).find('.delete_button');
-          if($(this).find("ol").text().trim().length == 0)
+          // no children - can delete
+          if($(this).find("ol li").length == 0)
               del_button.addClass('delete').
                   removeClass('undeleted').
                   attr('title', del_button.data('delete-title')).
@@ -32,6 +33,7 @@ function sortable_tree_init(tree_config) {
                   attr('data-confirm', del_button.data('delete-confirm')).
                   attr('data-method', 'delete').
                   attr('onclick', 'return false;');
+          // has children - cant delete
           else
               del_button.addClass('undeleted').
                   removeClass('delete').
