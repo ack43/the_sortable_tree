@@ -3,6 +3,7 @@
     - title = opts[:title].call(node)
   - else
     - title = node.send opts[:title]
+
   - if opts[:extra].is_a? Proc
     - extra = opts[:extra].call(node)
   - else
@@ -11,7 +12,7 @@
   - if opts[:link_class].is_a? Proc
     - link_class = opts[:link_class].call(node)
   - else
-    - link_class = opts[:link_class]
+    - link_class = node.send opts[:link_class]
 
   - handle = content_tag :i, '', :class => :handle
   - link = link_to(title, url_for(opts[:namespace] + [node]), :title => strip_tags(title).strip, :class => link_class)
