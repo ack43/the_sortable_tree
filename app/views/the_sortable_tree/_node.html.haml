@@ -14,7 +14,7 @@
     - link_class = opts[:link_class]
 
   - handle = content_tag :i, '', :class => :handle
-  - link = link_to(title, url_for(opts[:namespace] + [node]), :title => strip_tags(title).strip), class: link_class
+  - link = link_to(title, url_for(opts[:namespace] + [node]), :title => strip_tags(title).strip, :class => link_class)
   - controls = render(:partial => "#{opts[:path]}/controls", :locals => { :node => node, :opts => opts })
   - controls = content_tag(:b, controls, :class => :controls)
   - element = handle + extra + controls + link 
